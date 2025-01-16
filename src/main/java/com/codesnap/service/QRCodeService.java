@@ -3,13 +3,15 @@ package com.codesnap.service;
 import com.codesnap.util.QRCodeGenerator;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+
 @Service
 public class QRCodeService {
 
-    public byte[] generateQRCode(String data, int width, int height) {
+    public byte[] generateQRCode(String text, int width, int height) {
         try {
-            return QRCodeGenerator.generateQRCode(data, width, height);
-        } catch (Exception e) {
+            return QRCodeGenerator.generateQRCodeAsBytes(text, width, height);
+        } catch (IOException e) {
             throw new RuntimeException("Erro ao gerar o QR Code", e);
         }
     }
