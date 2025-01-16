@@ -1,20 +1,14 @@
 package com.codesnap.service;
 
-import com.codesnap.generator.QRCodeGenerator;
+import com.codesnap.util.QRCodeGenerator;
 import org.springframework.stereotype.Service;
 
 @Service
 public class QRCodeService {
 
-    private final QRCodeGenerator qrCodeGenerator;
-
-    public QRCodeService(QRCodeGenerator qrCodeGenerator) {
-        this.qrCodeGenerator = qrCodeGenerator;
-    }
-
-    public String generateQRCode(String data) {
+    public byte[] generateQRCode(String data, int width, int height) {
         try {
-            return qrCodeGenerator.generateQRCodeBase64(data);
+            return QRCodeGenerator.generateQRCode(data, width, height);
         } catch (Exception e) {
             throw new RuntimeException("Erro ao gerar o QR Code", e);
         }
