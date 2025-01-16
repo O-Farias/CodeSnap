@@ -13,15 +13,25 @@ import javax.imageio.ImageIO;
 public class QRCodeGenerator {
 
     // Método para gerar QR Code como um array de bytes
-    public static byte[] generateQRCode(String text, int width, int height) throws WriterException, IOException {
+    public static byte[] generateQRCodeAsBytes(String text, int width, int height) throws IOException {
+        if (text == null || text.isEmpty()) {
+            throw new IllegalArgumentException("O texto para o QR Code não pode ser nulo ou vazio.");
+        }
+        if (width <= 0 || height <= 0) {
+            throw new IllegalArgumentException("As dimensões do QR Code devem ser maiores que zero.");
+        }
+
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height);
+        try {
+            BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height);
+            BufferedImage qrImage = toBufferedImage(bitMatrix);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ImageIO.write(qrImage, "PNG", outputStream);
 
-        BufferedImage qrImage = toBufferedImage(bitMatrix);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ImageIO.write(qrImage, "PNG", outputStream);
-
-        return outputStream.toByteArray();
+            return outputStream.toByteArray();
+        } catch (WriterException e) {
+            throw new IOException("Erro ao gerar o QR Code: " + e.getMessage(), e);
+        }
     }
 
     // Método auxiliar para converter BitMatrix em BufferedImage
